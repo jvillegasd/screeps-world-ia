@@ -50,8 +50,9 @@ class CreepBase {
       case OK:
         creep.say('🔄 harvest');
         this.setStatus(creep, STATUSES.Harvest);
+        break;
       default:
-        console.error(`⛔ Code not handled: ${code}`);
+        console.error(`⛔ code not handled: ${code}`);
     }
   }
 }

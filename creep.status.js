@@ -5,4 +5,5 @@ module.exports = {
   Idle: 'idle',
   Suicide: 'suicide',
   Move: 'move',
+  Recharge: 'recharge'
 };
