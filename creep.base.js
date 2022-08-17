@@ -22,8 +22,7 @@ class CreepBase {
 
   moveTo(creep, target, color) {
     const opts = {};
-
-    if (creep.memory.status === STATUSES.Move) return;
+    
     if (color) {
       opts.visualizePathStyle = {
         stroke: color,
@@ -37,8 +36,6 @@ class CreepBase {
   }
 
   harvest(creep) {
-    if (creep.memory.status === STATUSES.Harvest) return;
-
     let closestSource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
     if (!closestSource) return;
 
@@ -52,7 +49,10 @@ class CreepBase {
         this.setStatus(creep, STATUSES.Harvest);
         break;
       default:
-        console.error(`⛔ code not handled: ${code}`);
+        console.error(
+          `⛔ code not handled: ${code}`,
+          `creep<name=<${creep.name}>, role=${this.roleName}>`
+        );
     }
   }
 }
