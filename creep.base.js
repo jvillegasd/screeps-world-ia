@@ -9,6 +9,10 @@ class CreepBase {
     return creep.memory.role === this.roleName;
   }
 
+  getCreepName(creep) {
+    return `creep<name=<${creep.name}>, role=${this.roleName}>`;
+  }
+
   setStatus(creep, status) {
     creep.memory.status = status;
   }
@@ -16,13 +20,19 @@ class CreepBase {
   suicide(creep) {
     creep.say('💀 suicide');
     this.setStatus(creep, 'Suicide');
-    console.log(`${creep}${creep.pos} is suiciding`);
     creep.suicide();
+
+    for (const resourceType in creep.carry) {
+      creep.drop(resourceType);
+    }
+    delete Memory.creeps[creep.name];
+
+    console.log(getCreepName(), `💀 commited suicide at ${creep.pos}`);
   }
 
   moveTo(creep, target, color) {
     const opts = {};
-    
+
     if (color) {
       opts.visualizePathStyle = {
         stroke: color,
@@ -49,10 +59,7 @@ class CreepBase {
         this.setStatus(creep, STATUSES.Harvest);
         break;
       default:
-        console.error(
-          `⛔ code not handled: ${code}`,
-          `creep<name=<${creep.name}>, role=${this.roleName}>`
-        );
+        console.error(this.getCreepName(), `⛔ code not handled: ${code}`);
     }
   }
 }
