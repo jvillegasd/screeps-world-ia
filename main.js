@@ -1,12 +1,9 @@
-const roleHarvester = require('role.harvester');
+const CreepManager = require('./creep.manager');
 
-// https://github.com/screeps/tutorial-scripts/blob/master/section5/main.js
 module.exports.loop = () => {
-  for (let name in Game.creeps) {
-    const creep = Game.creeps[name];
-
-    if (creep.memory.role === 'harvester') {
-      roleHarvester.run(creep);
-    }
+  if (Game.cpu.tickLimit < 50) {
+    console.warn('⚠️ game CPU dangerously low', Game.cpu);
   }
+  // TODO: Create Struct base class and Spawner
+  CreepManager.runAll(Game.creeps);
 };
