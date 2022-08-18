@@ -6,11 +6,14 @@ class CreepBase {
   }
 
   hasRole(creep) {
-    return creep.memory.role === this.roleName;
+    return (
+      creep.memory.role &&
+      this.roleName.toString() === creep.memory.role.toString()
+    );
   }
 
   getCreepName(creep) {
-    return `creep<name=<${creep.name}>, role=${this.roleName}>`;
+    return `creep<name=${creep.name}, role=${this.roleName}>`;
   }
 
   setStatus(creep, status) {
@@ -52,7 +55,7 @@ class CreepBase {
     const code = creep.harvest(closestSource);
     switch (code) {
       case ERR_NOT_IN_RANGE:
-        this.moveTo(closestSource, '#ffaa00');
+        this.moveTo(creep, closestSource, '#ffaa00');
         break;
       case OK:
         creep.say('🔄 harvest');

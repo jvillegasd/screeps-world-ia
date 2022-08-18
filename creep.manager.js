@@ -4,12 +4,12 @@ const roles = ROLE_NAMES.map((role) => require(role));
 
 module.exports = {
   runAll(creeps) {
-    for (let creep of creeps) {
-      this.runRoleTask(creep);
+    for (let name in creeps) {
+      this.runRoleTask(creeps[name]);
     }
   },
   runRoleTask(creep) {
-    const creepRole = roles.filter((role) => role.hasRole(creep));
+    const creepRole = roles.find((role) => role.hasRole(creep));
     if (creep.spawning || !creepRole || !this.preRun(creep, creepRole)) {
       return;
     }
