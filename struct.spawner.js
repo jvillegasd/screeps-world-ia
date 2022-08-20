@@ -6,7 +6,10 @@ class Spawner {
     this.structures = {};
   }
 
-  run(spawner) {}
+  run(spawner) {
+    // TODO: Check if there are minimum type of creeps
+    // create new creeps otherwise.
+  }
 
   getStructures(room) {
     if (!this.structures[room.name]) {
@@ -14,7 +17,7 @@ class Spawner {
         filter: this.structureFilter,
       });
     }
-    this.structures[room.name];
+    return this.structures[room.name];
   }
 
   getConstructionSites(room) {
