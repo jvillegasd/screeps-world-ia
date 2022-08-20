@@ -2,10 +2,13 @@ const CreepBase = require('./creep.base');
 const STATUSES = require('./creep.status');
 
 const ROLE = 'builder';
+const BODY_PARTS = [WORK, WORK, CARRY, MOVE];
+const MIN_AMOUNT = 2;
+
 
 class RoleBuilder extends CreepBase {
   constructor() {
-    super(ROLE);
+    super(ROLE, BODY_PARTS, MIN_AMOUNT);
   }
 
   run(creep) {

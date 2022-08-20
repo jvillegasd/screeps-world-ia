@@ -1,15 +1,14 @@
 const STATUSES = require('./creep.status');
 
 class CreepBase {
-  constructor(role) {
+  constructor(role, bodyParts, minAmount) {
     this.roleName = role;
+    this.bodyParts = bodyParts;
+    this.minAmount = minAmount;
   }
 
   hasRole(creep) {
-    return (
-      creep.memory.role &&
-      this.roleName.toString() === creep.memory.role.toString()
-    );
+    return creep.memory.role && this.roleName === creep.memory.role;
   }
 
   getCreepName(creep) {
@@ -18,6 +17,29 @@ class CreepBase {
 
   setStatus(creep, status) {
     creep.memory.status = status;
+  }
+
+  canSpawn(spawner) {
+    const numOfCreeps = _.sum(
+      Game.creeps,
+      (creep) => spawner.room.name === creep.room.name && this.hasRole(creep)
+    );
+    return numOfCreeps <= this.minAmount;
+  }
+
+  spawn(spawner) {
+    const creepName = `${this.roleName}_${Game.time}`;
+    const code = spawner.spawnCreep(this.bodyParts, creepName, {
+      memory: { role: this.roleName, status: STATUSES.Idle },
+    });
+
+    switch (code) {
+      case OK:
+        console.log(`🛠 ${creepName} spawned`);
+        break;
+      default:
+        console.error(creepName, `⛔ code not handled: ${code}`);
+    }
   }
 
   suicide(creep) {
@@ -43,7 +65,7 @@ class CreepBase {
         lineStyle: 'dotted',
       };
     }
-    creep.say(`🚙 moving to ${target}`);
+    creep.say(`🚙 move`);
     this.setStatus(creep, STATUSES.Move);
     return creep.moveTo(target, opts);
   }
