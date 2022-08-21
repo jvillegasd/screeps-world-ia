@@ -1,3 +1,7 @@
+const ROLE_NAMES = ['role.harvester', 'role.builder', 'role.upgrader'];
+
+const roles = ROLE_NAMES.map((role) => require(role));
+
 class Spawner {
   constructor() {
     this.structureType = STRUCTURE_SPAWN;
@@ -7,8 +11,11 @@ class Spawner {
   }
 
   run(spawner) {
-    // TODO: Check if there are minimum type of creeps
-    // create new creeps otherwise.
+    for (const role of roles) {
+      if (role.canSpawn(spawner)) {
+        role.spawn(spawner);
+      }
+    }
   }
 
   getStructures(room) {
@@ -34,3 +41,5 @@ class Spawner {
     this.structures = {};
   }
 }
+
+module.exports = new Spawner();
