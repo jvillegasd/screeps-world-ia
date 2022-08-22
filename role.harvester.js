@@ -13,6 +13,31 @@ class RoleHarvester extends CreepBase {
   run(creep) {
     if (!this.hasRole(creep)) return false;
 
+    switch (creep.memory.status) {
+      case STATUSES.Recharge:
+        this.runRechargeProcess(creep);
+        break;
+      case STATUSES.Idle:
+      case STATUSES.Harvest:
+        this.runHarvestProcess(creep);
+        break;
+      default:
+        console.log(
+          this.getCreepName(creep),
+          `⛔ status not handled: ${creep.memory.status}`
+        );
+    }
+  }
+
+  runRechargeProcess(creep) {
+    if (creep.store[RESOURCE_ENERGY] > 0) {
+      this.recharge(creep);
+    } else {
+      this.setStatus(creep, STATUSES.Harvest);
+    }
+  }
+
+  runHarvestProcess(creep) {
     if (creep.store.getFreeCapacity() > 0) {
       this.harvest(creep);
     } else {

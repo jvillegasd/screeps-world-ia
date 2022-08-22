@@ -17,14 +17,14 @@ class RoleUpgrader extends CreepBase {
       case STATUSES.Upgrade:
         this.runUpgradeProcess(creep);
         break;
-      case STATUSES.Harvest:
       case STATUSES.Idle:
+      case STATUSES.Harvest:
         this.runHarvestProcess(creep);
         break;
       default:
         console.log(
           this.getCreepName(creep),
-          `⛔ status not handled: ${STATUSES.Idle}`
+          `⛔ status not handled: ${creep.memory.status}`
         );
     }
   }

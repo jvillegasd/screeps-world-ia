@@ -13,9 +13,34 @@ class RoleBuilder extends CreepBase {
   run(creep) {
     if (!this.hasRole(creep)) return false;
 
-    if (creep.store[RESOURCE_ENERGY] === 0) {
+    switch (creep.memory.status) {
+      case STATUSES.Build:
+        this.runBuildProcess(creep);
+        break;
+      case STATUSES.Idle:
+      case STATUSES.Harvest:
+        this.runHarvestProcess(creep);
+        break;
+      default:
+        console.log(
+          this.getCreepName(creep),
+          `⛔ status not handled: ${creep.memory.status}`
+        );
+    }
+  }
+
+  runBuildProcess(creep) {
+    if (creep.store[RESOURCE_ENERGY] > 0) {
+      this.build(creep);
+    } else {
+      this.setStatus(creep, STATUSES.Harvest);
+    }
+  }
+
+  runHarvestProcess(creep) {
+    if (creep.store.getFreeCapacity() > 0) {
       this.harvest(creep);
-    } else if (creep.store.getFreeCapacity() === 0) {
+    } else {
       this.build(creep);
     }
   }
