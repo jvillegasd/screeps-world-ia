@@ -32,6 +32,8 @@ class CreepBase {
   }
 
   spawn(spawner) {
+    if (spawner.spawning) return;
+
     const creepName = `${this.roleName}_${Game.time}`;
     const code = spawner.spawnCreep(this.bodyParts, creepName, {
       memory: { role: this.roleName, status: STATUSES.Idle },
@@ -43,6 +45,7 @@ class CreepBase {
         break;
       case ERR_BUSY:
         // Ignore this case
+        console.log(spawner.name, '🛠 spawner busy');
         break;
       case ERR_NOT_ENOUGH_ENERGY:
         console.log(spawner.name, `🔋 not enough energy to spawn ${creepName}`);
