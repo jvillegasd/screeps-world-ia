@@ -13,16 +13,34 @@ class RoleUpgrader extends CreepBase {
   run(creep) {
     if (!this.hasRole(creep)) return false;
 
-    if (
-      creep.memory.status === STATUSES.Upgrade &&
-      creep.store[RESOURCE_ENERGY] === 0
-    ) {
-      this.harvest(creep);
+    switch (creep.memory.status) {
+      case STATUSES.Upgrade:
+        this.runUpgradeProcess(creep);
+        break;
+      case STATUSES.Harvest:
+      case STATUSES.Idle:
+        this.runHarvestProcess(creep);
+        break;
+      default:
+        console.log(
+          this.getCreepName(creep),
+          `⛔ status not handled: ${STATUSES.Idle}`
+        );
     }
-    if (
-      creep.memory.status !== STATUSES.Upgrade &&
-      creep.store.getFreeCapacity() === 0
-    ) {
+  }
+
+  runUpgradeProcess(creep) {
+    if (creep.store[RESOURCE_ENERGY] > 0) {
+      this.upgrade(creep);
+    } else {
+      this.setStatus(creep, STATUSES.Harvest);
+    }
+  }
+
+  runHarvestProcess(creep) {
+    if (creep.store.getFreeCapacity() > 0) {
+      this.harvest(creep);
+    } else {
       this.upgrade(creep);
     }
   }
@@ -38,7 +56,7 @@ class RoleUpgrader extends CreepBase {
         this.setStatus(creep, STATUSES.Upgrade);
         break;
       default:
-        console.error(this.getCreepName(), `⛔ code not handled: ${code}`);
+        console.log(this.getCreepName(creep), `⛔ code not handled: ${code}`);
     }
   }
 }

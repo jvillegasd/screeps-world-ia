@@ -5,7 +5,6 @@ const ROLE = 'builder';
 const BODY_PARTS = [WORK, WORK, CARRY, MOVE];
 const MIN_AMOUNT = 2;
 
-
 class RoleBuilder extends CreepBase {
   constructor() {
     super(ROLE, BODY_PARTS, MIN_AMOUNT);
@@ -14,16 +13,9 @@ class RoleBuilder extends CreepBase {
   run(creep) {
     if (!this.hasRole(creep)) return false;
 
-    if (
-      creep.memory.status === STATUSES.Build &&
-      creep.store[RESOURCE_ENERGY] === 0
-    ) {
+    if (creep.store[RESOURCE_ENERGY] === 0) {
       this.harvest(creep);
-    }
-    if (
-      creep.memory.status !== STATUSES.Build &&
-      creep.store.getFreeCapacity() === 0
-    ) {
+    } else if (creep.store.getFreeCapacity() === 0) {
       this.build(creep);
     }
   }
@@ -41,7 +33,7 @@ class RoleBuilder extends CreepBase {
           this.setStatus(creep, STATUSES.Build);
           break;
         default:
-          console.error(this.getCreepName(), `⛔ code not handled: ${code}`);
+          console.log(this.getCreepName(creep), `⛔ code not handled: ${code}`);
       }
     }
   }

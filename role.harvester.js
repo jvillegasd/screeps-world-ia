@@ -43,7 +43,7 @@ class RoleHarvester extends CreepBase {
           this.setStatus(creep, STATUSES.Recharge);
           break;
         default:
-          console.error(this.getCreepName(), `⛔ code not handled: ${code}`);
+          console.log(this.getCreepName(creep), `⛔ code not handled: ${code}`);
       }
     }
   }

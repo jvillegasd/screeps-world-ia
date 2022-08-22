@@ -12,7 +12,7 @@ class CreepBase {
   }
 
   getCreepName(creep) {
-    return `creep<name=${creep.name}, role=${this.roleName}>`;
+    return `creep[name=${creep.name}, role=${this.roleName}]`;
   }
 
   setStatus(creep, status) {
@@ -24,6 +24,7 @@ class CreepBase {
       Game.creeps,
       (creep) => spawner.room.name === creep.room.name && this.hasRole(creep)
     );
+    // TODO: Check cost of building + spawner energy
     return numOfCreeps <= this.minAmount;
   }
 
@@ -37,8 +38,11 @@ class CreepBase {
       case OK:
         console.log(`🛠 ${creepName} spawned`);
         break;
+      case ERR_BUSY:
+        // Ignore this case
+        break;
       default:
-        console.error(creepName, `⛔ code not handled: ${code}`);
+        console.log(creepName, `⛔ code not handled: ${code}`);
     }
   }
 
@@ -52,7 +56,7 @@ class CreepBase {
     }
     delete Memory.creeps[creep.name];
 
-    console.log(getCreepName(), `💀 commited suicide at ${creep.pos}`);
+    console.log(this.getCreepName(creep), `💀 commited suicide at ${creep.pos}`);
   }
 
   moveTo(creep, target, color) {
@@ -66,7 +70,6 @@ class CreepBase {
       };
     }
     creep.say(`🚙 move`);
-    this.setStatus(creep, STATUSES.Move);
     return creep.moveTo(target, opts);
   }
 
@@ -84,7 +87,7 @@ class CreepBase {
         this.setStatus(creep, STATUSES.Harvest);
         break;
       default:
-        console.error(this.getCreepName(), `⛔ code not handled: ${code}`);
+        console.log(this.getCreepName(creep), `⛔ code not handled: ${code}`);
     }
   }
 }
