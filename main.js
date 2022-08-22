@@ -4,6 +4,7 @@ const Spawner = require('./struct.spawner');
 module.exports.loop = () => {
   if (Game.cpu.tickLimit < 50) {
     console.warn('⚠️ game CPU dangerously low', Game.cpu);
+    return;
   }
   
   for (const roomName in Game.rooms) {
