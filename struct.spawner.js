@@ -11,8 +11,8 @@ class Spawner {
   }
 
   run(spawner) {
-    if (spawner.Spawning) {
-        spawner.say('🛠 spawn');
+    if (spawner.spawning) {
+        console.log(spawner.name, '🛠 spawn');
         return;
     }
     
