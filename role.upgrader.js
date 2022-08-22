@@ -49,7 +49,7 @@ class RoleUpgrader extends CreepBase {
     const code = creep.upgradeController(creep.room.controller);
     switch (code) {
       case ERR_NOT_IN_RANGE:
-        this.moveTo(code, creep.room.controller, '#D1D100');
+        this.moveTo(creep, creep.room.controller, '#D1D100');
         break;
       case OK:
         creep.say('⚡ upgrade');

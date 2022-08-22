@@ -1,4 +1,5 @@
 const STATUSES = require('./creep.status');
+const creepBody = require('./creep.body-part');
 
 class CreepBase {
   constructor(role, bodyParts, minAmount) {
@@ -24,8 +25,10 @@ class CreepBase {
       Game.creeps,
       (creep) => spawner.room.name === creep.room.name && this.hasRole(creep)
     );
-    // TODO: Check cost of building + spawner energy
-    return numOfCreeps <= this.minAmount;
+    const hasEnoughEnergy =
+      creepBody.calculateCost(this.bodyParts) <= spawner.room.energyAvailable;
+
+    return numOfCreeps < this.minAmount && hasEnoughEnergy;
   }
 
   spawn(spawner) {
@@ -41,6 +44,8 @@ class CreepBase {
       case ERR_BUSY:
         // Ignore this case
         break;
+      case ERR_NOT_ENOUGH_ENERGY:
+        console.log(spawner.name, `🔋 not enough energy to spawn ${creepName}`);
       default:
         console.log(creepName, `⛔ code not handled: ${code}`);
     }
@@ -56,7 +61,10 @@ class CreepBase {
     }
     delete Memory.creeps[creep.name];
 
-    console.log(this.getCreepName(creep), `💀 commited suicide at ${creep.pos}`);
+    console.log(
+      this.getCreepName(creep),
+      `💀 commited suicide at ${creep.pos}`
+    );
   }
 
   moveTo(creep, target, color) {

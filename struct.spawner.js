@@ -1,6 +1,6 @@
-const ROLE_NAMES = ['role.harvester', 'role.builder', 'role.upgrader'];
-
-const roles = ROLE_NAMES.map((role) => require(role));
+const roleHarvester = require('./role.harvester');
+const roleUpgrader = require('./role.upgrader');
+const roleBuilder = require('./role.builder');
 
 class Spawner {
   constructor() {
@@ -11,10 +11,11 @@ class Spawner {
   }
 
   run(spawner) {
-    for (const role of roles) {
-      if (role.canSpawn(spawner)) {
-        role.spawn(spawner);
-      }
+    // Set a hierarchy of roles
+    if (roleHarvester.canSpawn(spawner)) {
+      roleHarvester.spawn(spawner);
+    } else if (roleUpgrader.canSpawn(spawner)) {
+      roleUpgrader.spawn(spawner);
     }
   }
 
