@@ -32,8 +32,6 @@ class CreepBase {
   }
 
   spawn(spawner) {
-    if (spawner.spawning) return;
-
     const creepName = `${this.roleName}_${Game.time}`;
     const code = spawner.spawnCreep(this.bodyParts, creepName, {
       memory: { role: this.roleName, status: STATUSES.Idle },

@@ -11,6 +11,11 @@ class Spawner {
   }
 
   run(spawner) {
+    if (spawner.Spawning) {
+        spawner.say('🛠 spawn');
+        return;
+    }
+    
     // Set a hierarchy of roles
     if (roleHarvester.canSpawn(spawner)) {
       roleHarvester.spawn(spawner);
