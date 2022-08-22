@@ -27,7 +27,7 @@ class CreepBase {
     );
     const hasEnoughEnergy =
       creepBody.calculateCost(this.bodyParts) <= spawner.room.energyAvailable;
-    
+
     return numOfCreeps < this.minAmount && hasEnoughEnergy;
   }
 

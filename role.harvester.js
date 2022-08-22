@@ -3,7 +3,7 @@ const STATUSES = require('./creep.status');
 
 const ROLE = 'harvester';
 const BODY_PARTS = [WORK, WORK, CARRY, MOVE];
-const MIN_AMOUNT = 3;
+const MIN_AMOUNT = 2;
 
 class RoleHarvester extends CreepBase {
   constructor() {
