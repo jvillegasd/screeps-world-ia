@@ -21,8 +21,6 @@ class Spawner {
       roleHarvester.spawn(spawner);
     } else if (roleUpgrader.canSpawn(spawner)) {
       roleUpgrader.spawn(spawner);
-    } else if (roleBuilder.canSpawn(spawner)) {
-      roleBuilder.spawn(spawner);
     }
   }
 
