@@ -79,33 +79,43 @@ class CreepBase {
       };
     }
     creep.say(`🚙 move`);
-    creep.memory.currentPath = target;
+    creep.memory.currentTarget = target;
     return creep.moveTo(target, opts);
   }
 
-  getCurrentPath(creep) {
-    return Game.getObjectById(creep.memory.currentPath);
+  getCurrentTarget(creep) {
+    return Game.getObjectById(creep.memory.currentTarget);
   }
 
-  removeCurrentPath(creep) {
-    delete creep.memory.currentPath;
+  removeCurrentTarget(creep) {
+    delete creep.memory.currentTarget;
+  }
+
+  findDroppedResources(creep) {
+    const source = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, {
+      filter: (source) =>
+        source.resourceType === RESOURCE_ENERGY && source.projectedEnergy > 25,
+    });
+
+    return source;
   }
 
   harvest(creep) {
-    let sourcePath =
-      this.getCurrentPath(creep) ||
+    let source =
+      this.getCurrentTarget(creep) ||
+      this.findDroppedResources(creep) ||
       creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-    if (!sourcePath) return;
+    if (!source) return;
 
-    const code = creep.harvest(sourcePath);
+    const code = creep.harvest(source);
     switch (code) {
       case ERR_NOT_IN_RANGE:
-        this.moveTo(creep, sourcePath, '#ffaa00');
+        this.moveTo(creep, source, '#ffaa00');
         break;
       case OK:
         creep.say('🔄 harvest');
         this.setStatus(creep, STATUSES.Harvest);
-        this.removeCurrentPath(creep);
+        this.removeCurrentTarget(creep);
         break;
       default:
         console.log(this.getCreepName(creep), `⛔ code not handled: ${code}`);

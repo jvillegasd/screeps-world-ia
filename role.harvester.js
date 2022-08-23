@@ -46,8 +46,8 @@ class RoleHarvester extends CreepBase {
   }
 
   recharge(creep) {
-    let sourcePath = this.getCurrentPath(creep);
-    if (!sourcePath) {
+    let source = this.getCurrentTarget(creep);
+    if (!source) {
       const targets = creep.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
           return (
@@ -58,20 +58,20 @@ class RoleHarvester extends CreepBase {
           );
         },
       });
-      sourcePath = (targets.length) ? targets[0] : undefined;
+      source = (targets.length) ? targets[0] : undefined;
     }
     
 
-    if (sourcePath) {
-      const code = creep.transfer(sourcePath, RESOURCE_ENERGY);
+    if (source) {
+      const code = creep.transfer(source, RESOURCE_ENERGY);
       switch (code) {
         case ERR_NOT_IN_RANGE:
-          this.moveTo(creep, sourcePath, '#169612');
+          this.moveTo(creep, source, '#169612');
           break;
         case OK:
           creep.say('🔋 charge');
           this.setStatus(creep, STATUSES.Recharge);
-          this.removeCurrentPath(creep);
+          this.removeCurrentTarget(creep);
           break;
         default:
           console.log(this.getCreepName(creep), `⛔ code not handled: ${code}`);
