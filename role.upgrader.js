@@ -54,6 +54,7 @@ class RoleUpgrader extends CreepBase {
       case OK:
         creep.say('⚡ upgrade');
         this.setStatus(creep, STATUSES.Upgrade);
+        this.removeCurrentPath(creep);
         break;
       default:
         console.log(this.getCreepName(creep), `⛔ code not handled: ${code}`);

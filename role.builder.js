@@ -46,16 +46,22 @@ class RoleBuilder extends CreepBase {
   }
 
   build(creep) {
-    const targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-    if (targets.length) {
-      const code = creep.build(targets[0]);
+    let sourcePath = this.getCurrentPath(creep);
+    if (!sourcePath) {
+      const targets = creep.room.find(FIND_CONSTRUCTION_SITES);
+      sourcePath = (targets.length) ? targets[0]: undefined;
+    }
+    
+    if (sourcePath) {
+      const code = creep.build(sourcePath);
       switch (code) {
         case ERR_NOT_IN_RANGE:
-          this.moveTo(creep, targets[0], '#ffffff');
+          this.moveTo(creep, sourcePath, '#ffffff');
           break;
         case OK:
           creep.say('🚧 build');
           this.setStatus(creep, STATUSES.Build);
+          this.removeCurrentPath(creep);
           break;
         default:
           console.log(this.getCreepName(creep), `⛔ code not handled: ${code}`);

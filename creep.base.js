@@ -79,21 +79,33 @@ class CreepBase {
       };
     }
     creep.say(`🚙 move`);
+    creep.memory.currentPath = target;
     return creep.moveTo(target, opts);
   }
 
-  harvest(creep) {
-    let closestSource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-    if (!closestSource) return;
+  getCurrentPath(creep) {
+    return Game.getObjectById(creep.memory.currentPath);
+  }
 
-    const code = creep.harvest(closestSource);
+  removeCurrentPath(creep) {
+    delete creep.memory.currentPath;
+  }
+
+  harvest(creep) {
+    let sourcePath =
+      this.getCurrentPath(creep) ||
+      creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+    if (!sourcePath) return;
+
+    const code = creep.harvest(sourcePath);
     switch (code) {
       case ERR_NOT_IN_RANGE:
-        this.moveTo(creep, closestSource, '#ffaa00');
+        this.moveTo(creep, sourcePath, '#ffaa00');
         break;
       case OK:
         creep.say('🔄 harvest');
         this.setStatus(creep, STATUSES.Harvest);
+        this.removeCurrentPath(creep);
         break;
       default:
         console.log(this.getCreepName(creep), `⛔ code not handled: ${code}`);
