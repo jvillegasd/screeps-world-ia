@@ -3,7 +3,7 @@ const STATUSES = require('./creep.status');
 
 const ROLE = 'upgrader';
 const BODY_PARTS = [WORK, WORK, CARRY, MOVE];
-const MIN_AMOUNT = 2;
+const MIN_AMOUNT = 4;
 
 class RoleUpgrader extends CreepBase {
   constructor() {
