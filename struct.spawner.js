@@ -21,6 +21,8 @@ class Spawner {
       roleHarvester.spawn(spawner);
     } else if (roleUpgrader.canSpawn(spawner)) {
       roleUpgrader.spawn(spawner);
+    } else {
+      console.log('cannot')
     }
   }
 

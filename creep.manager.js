@@ -1,6 +1,8 @@
-const ROLE_NAMES = ['role.harvester', 'role.builder', 'role.upgrader'];
-
-const roles = ROLE_NAMES.map((role) => require(role));
+const roles = {
+  harvester: require('./role.harvester'),
+  upgrader: require('./role.upgrader'),
+  builder: require('./role.builder'),
+};
 
 module.exports = {
   runAll(creeps) {
@@ -9,7 +11,7 @@ module.exports = {
     }
   },
   runRoleTask(creep) {
-    const creepRole = roles.find((role) => role.hasRole(creep));
+    const creepRole = roles[creep.memory.role];
     if (creep.spawning || !creepRole || !this.preRun(creep, creepRole)) {
       return;
     }
