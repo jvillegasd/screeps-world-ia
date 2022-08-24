@@ -11,18 +11,25 @@ class Spawner {
   }
 
   run(spawner) {
-    if (spawner.spawning) {
-        console.log(spawner.name, '🛠 spawn');
-        return;
+    if (spawner.spawning != null) {
+      console.log(spawner.name, '🛠 spawn');
+      return;
     }
-    
+    if (spawner.store[RESOURCE_ENERGY] < 300) {
+      return;
+    }
+
     // Set a hierarchy of roles
     if (roleHarvester.canSpawn(spawner)) {
       roleHarvester.spawn(spawner);
     } else if (roleUpgrader.canSpawn(spawner)) {
       roleUpgrader.spawn(spawner);
     } else {
-      console.log('cannot')
+      console.log(
+        'cannot',
+        creepBody.calculateCost(this.bodyParts),
+        spawner.room.energyAvailable
+      );
     }
   }
 

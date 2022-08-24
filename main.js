@@ -6,13 +6,19 @@ module.exports.loop = () => {
     console.warn('⚠️ game CPU dangerously low', Game.cpu);
     return;
   }
-  
+
   for (const roomName in Game.rooms) {
     const room = Game.rooms[roomName];
-    const spawners = Spawner.getStructures(room);
+    if (!room.controller || !room.controller.my) {
+      continue;
+    }
 
-    for (const spawnerName in spawners) {
-      Spawner.run(spawners[spawnerName]);
+    const spawnTicks = 5;
+    if (Game.time % spawnTicks === 0) {
+      const spawners = Spawner.getStructures(room);
+      for (const spawnerName in spawners) {
+        Spawner.run(spawners[spawnerName]);
+      }
     }
   }
 

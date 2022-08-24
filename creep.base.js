@@ -21,14 +21,14 @@ class CreepBase {
   }
 
   canSpawn(spawner) {
-    const numOfCreeps = _.sum(
+    const creepCount = _.filter(
       Game.creeps,
       (creep) => spawner.room.name === creep.room.name && this.hasRole(creep)
-    );
+    ).length;
+
     const hasEnoughEnergy =
       creepBody.calculateCost(this.bodyParts) <= spawner.room.energyAvailable;
-
-    return numOfCreeps < this.minAmount && hasEnoughEnergy;
+    return creepCount < this.minAmount && hasEnoughEnergy;
   }
 
   spawn(spawner) {
@@ -47,6 +47,7 @@ class CreepBase {
         break;
       case ERR_NOT_ENOUGH_ENERGY:
         console.log(spawner.name, `🔋 not enough energy to spawn ${creepName}`);
+        break;
       default:
         console.log(creepName, `⛔ code not handled: ${code}`);
     }
