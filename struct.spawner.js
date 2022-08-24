@@ -4,18 +4,19 @@ const roleBuilder = require('./role.builder');
 
 class Spawner {
   constructor() {
+    this.minimumCreepCost = 300;
     this.structureType = STRUCTURE_SPAWN;
     this.structureFilter = { structureType: this.structureType };
-    this.sites = {};
-    this.structures = {};
   }
 
   run(spawner) {
+    // Spawner is already spawning
     if (spawner.spawning != null) {
-      console.log(spawner.name, '🛠 spawn');
       return;
     }
-    if (spawner.store[RESOURCE_ENERGY] < 300) {
+
+    // Spawner can not create a basic creep
+    if (spawner.store[RESOURCE_ENERGY] < this.minimumCreepCost) {
       return;
     }
 
@@ -24,36 +25,19 @@ class Spawner {
       roleHarvester.spawn(spawner);
     } else if (roleUpgrader.canSpawn(spawner)) {
       roleUpgrader.spawn(spawner);
-    } else {
-      console.log(
-        'cannot',
-        creepBody.calculateCost(this.bodyParts),
-        spawner.room.energyAvailable
-      );
     }
   }
 
   getStructures(room) {
-    if (!this.structures[room.name]) {
-      this.structures[room.name] = room.find(FIND_MY_SPAWNS, {
-        filter: this.structureFilter,
-      });
-    }
-    return this.structures[room.name];
+    return room.find(FIND_MY_STRUCTURES, {
+      filter: this.structureFilter,
+    });
   }
 
   getConstructionSites(room) {
-    if (!this.sites[room.name]) {
-      this.sites[room.name] = room.find(FIND_CONSTRUCTION_SITES, {
-        filter: this.structureFilter,
-      });
-    }
-    return this.sites[room.name];
-  }
-
-  gc() {
-    this.sites = {};
-    this.structures = {};
+    return room.find(FIND_CONSTRUCTION_SITES, {
+      filter: this.structureFilter,
+    });
   }
 }
 

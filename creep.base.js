@@ -1,5 +1,4 @@
 const STATUSES = require('./creep.status');
-const creepBody = require('./creep.body-part');
 
 class CreepBase {
   constructor(role, bodyParts, minAmount) {
@@ -20,14 +19,18 @@ class CreepBase {
     creep.memory.status = status;
   }
 
+  calculateCost(bodyParts) {
+    return _.sum(bodyParts, (piece) => BODYPART_COST[piece]);
+  }
+
   canSpawn(spawner) {
     const creepCount = _.filter(
       Game.creeps,
       (creep) => spawner.room.name === creep.room.name && this.hasRole(creep)
     ).length;
-
     const hasEnoughEnergy =
-      creepBody.calculateCost(this.bodyParts) <= spawner.room.energyAvailable;
+      this.calculateCost(this.bodyParts) <= spawner.room.energyAvailable;
+
     return creepCount < this.minAmount && hasEnoughEnergy;
   }
 
@@ -39,11 +42,11 @@ class CreepBase {
 
     switch (code) {
       case OK:
-        console.log(`🛠 ${creepName} spawned`);
+        console.log(`🛠️ ${creepName} spawned`);
         break;
       case ERR_BUSY:
         // Ignore this case
-        console.log(spawner.name, '🛠 spawner busy');
+        console.log(spawner.name, '🛠️ spawner busy');
         break;
       case ERR_NOT_ENOUGH_ENERGY:
         console.log(spawner.name, `🔋 not enough energy to spawn ${creepName}`);
@@ -58,6 +61,7 @@ class CreepBase {
     this.setStatus(creep, 'Suicide');
     creep.suicide();
 
+    // Drop every resource and delete creep from memory
     for (const resourceType in creep.carry) {
       creep.drop(resourceType);
     }
@@ -81,6 +85,7 @@ class CreepBase {
     }
     creep.say(`🚙 move`);
     creep.memory.currentTarget = target;
+
     return creep.moveTo(target, opts);
   }
 
@@ -93,12 +98,10 @@ class CreepBase {
   }
 
   findDroppedResources(creep) {
-    const source = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, {
+    return creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, {
       filter: (source) =>
         source.resourceType === RESOURCE_ENERGY && source.projectedEnergy > 25,
     });
-
-    return source;
   }
 
   harvest(creep) {
